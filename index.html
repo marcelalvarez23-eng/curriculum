@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esqueleto 4 Grados — Escuela Iniciática</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #0F0F0F;
+    --dark2: #161616;
+    --dark3: #1E1E1E;
+    --gold: #C9A96E;
+    --gold-light: #E8D5A3;
+    --gold-dark: #8A6A3A;
+    --gold-glow: rgba(201,169,110,0.15);
+    --silver: #A8B8C8;
+    --white: #F0EAE0;
+    --cream: #E8E0D0;
+
+    /* Grade colors */
+    --nigredo: #1A1A2E;
+    --nigredo-accent: #6B6BFF;
+    --nigredo-light: rgba(107,107,255,0.15);
+
+    --albedo: #1A2A2E;
+    --albedo-accent: #7EC8C8;
+    --albedo-light: rgba(126,200,200,0.15);
+
+    --citrinitas: #2E2A1A;
+    --citrinitas-accent: #FFD700;
+    --citrinitas-light: rgba(255,215,0,0.12);
+
+    --rubedo: #2E1A1A;
+    --rubedo-accent: #FF6B6B;
+    --rubedo-light: rgba(255,107,107,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* STARFIELD */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+    opacity: var(--o, 0.3);
+  }
+
+  @keyframes twinkle {
+    from { opacity: var(--o, 0.3); transform: scale(1); }
+    to { opacity: calc(var(--o, 0.3) * 0.3); transform: scale(0.8); }
+  }
+
+  /* MAIN */
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 80px;
+    animation: fadeDown 1s ease both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-symbol {
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 12px;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.6;
+  }
+
+  .header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(16px, 3.5vw, 26px);
+    color: var(--gold);
+    letter-spacing: 3px;
+    line-height: 1.4;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    opacity: 0.5;
+    font-family: 'Cinzel', serif;
+  }
+
+  .header-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 24px auto 0;
+  }
+
+  /* GRADE CARDS */
+  .grade {
+    margin-bottom: 60px;
+    border-radius: 2px;
+    overflow: hidden;
+    animation: fadeUp 0.8s ease both;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .grade:nth-child(1) { animation-delay: 0.1s; }
+  .grade:nth-child(2) { animation-delay: 0.2s; }
+  .grade:nth-child(3) { animation-delay: 0.3s; }
+  .grade:nth-child(4) { animation-delay: 0.4s; }
+
+  /* GRADE HEADER */
+  .grade-header {
+    padding: 32px 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grade-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.85;
+  }
+
+  .grade-nigredo .grade-header { background: var(--nigredo); }
+  .grade-nigredo .grade-header::before { background: radial-gradient(ellipse at 80% 50%, var(--nigredo-light), transparent 70%); }
+
+  .grade-albedo .grade-header { background: var(--albedo); }
+  .grade-albedo .grade-header::before { background: radial-gradient(ellipse at 80% 50%, var(--albedo-light), transparent 70%); }
+
+  .grade-citrinitas .grade-header { background: var(--citrinitas); }
+  .grade-citrinitas .grade-header::before { background: radial-gradient(ellipse at 80% 50%, var(--citrinitas-light), transparent 70%); }
+
+  .grade-rubedo .grade-header { background: var(--rubedo); }
+  .grade-rubedo .grade-header::before { background: radial-gradient(ellipse at 80% 50%, var(--rubedo-light), transparent 70%); }
+
+  .grade-header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .grade-number {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.12;
+    flex-shrink: 0;
+  }
+
+  .grade-nigredo .grade-number { color: var(--nigredo-accent); }
+  .grade-albedo .grade-number { color: var(--albedo-accent); }
+  .grade-citrinitas .grade-number { color: var(--citrinitas-accent); }
+  .grade-rubedo .grade-number { color: var(--rubedo-accent); }
+
+  .grade-titles { flex: 1; }
+
+  .grade-roman {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 6px;
+  }
+
+  .grade-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(18px, 3.5vw, 26px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .grade-nigredo .grade-name { color: #A0A0FF; }
+  .grade-albedo .grade-name { color: var(--albedo-accent); }
+  .grade-citrinitas .grade-name { color: var(--citrinitas-accent); }
+  .grade-rubedo .grade-name { color: var(--rubedo-accent); }
+
+  .grade-subtitle {
+    font-size: clamp(14px, 2vw, 17px);
+    font-style: italic;
+    color: var(--cream);
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .grade-identity {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 1px;
+    border: 1px solid;
+    opacity: 0.7;
+  }
+
+  .grade-nigredo .grade-identity { border-color: var(--nigredo-accent); color: var(--nigredo-accent); }
+  .grade-albedo .grade-identity { border-color: var(--albedo-accent); color: var(--albedo-accent); }
+  .grade-citrinitas .grade-identity { border-color: var(--citrinitas-accent); color: var(--citrinitas-accent); }
+  .grade-rubedo .grade-identity { border-color: var(--rubedo-accent); color: var(--rubedo-accent); }
+
+  .grade-essence {
+    font-size: clamp(13px, 1.8vw, 15px);
+    font-style: italic;
+    opacity: 0.5;
+    margin-top: 16px;
+    line-height: 1.5;
+    border-left: 2px solid;
+    padding-left: 14px;
+  }
+
+  .grade-nigredo .grade-essence { border-color: rgba(107,107,255,0.3); }
+  .grade-albedo .grade-essence { border-color: rgba(126,200,200,0.3); }
+  .grade-citrinitas .grade-essence { border-color: rgba(255,215,0,0.3); }
+  .grade-rubedo .grade-essence { border-color: rgba(255,107,107,0.3); }
+
+  /* GRADE BODY */
+  .grade-body {
+    background: var(--dark2);
+    padding: 32px 36px;
+  }
+
+  /* SECTION BLOCKS */
+  .section-block {
+    margin-bottom: 32px;
+  }
+
+  .section-block:last-child { margin-bottom: 0; }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.5;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,169,110,0.2), transparent);
+  }
+
+  /* MODULES GRID */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .module-item {
+    background: var(--dark3);
+    border-radius: 2px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: border-color 0.2s;
+  }
+
+  .module-item:hover { border-color: rgba(201,169,110,0.15); }
+
+  .module-num {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    opacity: 0.3;
+    margin-bottom: 5px;
+  }
+
+  .module-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .module-desc {
+    font-size: 12px;
+    opacity: 0.4;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* TECHNIQUES */
+  .techniques-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .technique-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(201,169,110,0.04);
+    border-radius: 2px;
+    border-left: 2px solid rgba(201,169,110,0.2);
+  }
+
+  .technique-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .technique-text {
+    flex: 1;
+  }
+
+  .technique-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gold-light);
+    margin-bottom: 2px;
+  }
+
+  .technique-detail {
+    font-size: 12px;
+    opacity: 0.45;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* OUTCOME */
+  .outcome-box {
+    background: rgba(201,169,110,0.06);
+    border: 1px solid rgba(201,169,110,0.12);
+    border-radius: 2px;
+    padding: 18px 20px;
+    font-size: clamp(14px, 1.8vw, 16px);
+    font-style: italic;
+    color: var(--gold-light);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* FORMAT BADGES */
+  .format-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .format-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 1px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--white);
+    opacity: 0.6;
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* DIVIDER */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.15), transparent);
+    margin: 24px 0;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    opacity: 0.3;
+  }
+
+  .footer p {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 600px) {
+    .grade-header { padding: 24px 20px; }
+    .grade-body { padding: 24px 20px; }
+    .grade-header-inner { flex-direction: column; gap: 12px; }
+    .grade-number { font-size: 36px; }
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STARS -->
+<div class="stars" id="stars"></div>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="header-symbol">✦ ◈ ✦</span>
+    <h1>Escuela Iniciática<br>de la Nueva Tierra</h1>
+    <p class="header-sub">Academia de Sacerdotisas Modernas</p>
+    <div class="header-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- GRADO I — NIGREDO -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="grade grade-nigredo">
+    <div class="grade-header">
+      <div class="grade-header-inner">
+        <div class="grade-number">I</div>
+        <div class="grade-titles">
+          <div class="grade-roman">Grado I · Nigredo</div>
+          <div class="grade-name">El Espejo Negro</div>
+          <div class="grade-subtitle">La desintegración de la identidad inconsciente</div>
+          <div class="grade-identity">Buscadora Consciente</div>
+          <div class="grade-essence">
+            "Aquí caen las máscaras. La mujer ve lo que ocultaba de sí misma y asume responsabilidad radical. No es destrucción — es el primer acto de honestidad real."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-body">
+
+      <div class="section-block">
+        <div class="section-label">Módulos del Programa</div>
+        <div class="modules-grid">
+          <div class="module-item">
+            <div class="module-num">01</div>
+            <div class="module-name">El Mapa Multidimensional de las Heridas</div>
+            <div class="module-desc">Mental · Arquetípico · Energético (chakras)</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">02</div>
+            <div class="module-name">La Herida Ancestral y el ADN Familiar</div>
+            <div class="module-desc">Repetición de patrones · Memorias del linaje</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">03</div>
+            <div class="module-name">Heridas del Alma y Memorias Multidimensionales</div>
+            <div class="module-desc">Experiencias previas · Memorias del alma</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">04</div>
+            <div class="module-name">Encuentro con la Sombra</div>
+            <div class="module-desc">Traer la sombra a la luz · Confrontación directa</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">05</div>
+            <div class="module-name">Las Máscaras y la Identidad Falsa</div>
+            <div class="module-desc">Arquetipos de protección · Personas construidas</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">06</div>
+            <div class="module-name">Responsabilidad Radical</div>
+            <div class="module-desc">Del victimismo a la autoría de la propia vida</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Técnicas y Herramientas</div>
+        <div class="techniques-list">
+          <div class="technique-item">
+            <div class="technique-icon">⬡</div>
+            <div class="technique-text">
+              <div class="technique-name">Protocolo de Medición del Trigger (SN)</div>
+              <div class="technique-detail">Mapa corporal antes/después · Centros de energía · Escala de intensidad · El cuerpo como testigo objetivo de transformación</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">🜃</div>
+            <div class="technique-text">
+              <div class="technique-name">Terapia de Exposición Iniciática</div>
+              <div class="technique-detail">Exposición al gatillo en entorno seguro y contenido · Mini terapia de exposición a lo que duele y lo que se teme</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">◈</div>
+            <div class="technique-text">
+              <div class="technique-name">Cartografía de Sombra Personal</div>
+              <div class="technique-detail">Mapeo de heridas por capas · Trabajo escrito + introspección guiada · Cuadernillo de apoyo teórico</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">☽</div>
+            <div class="technique-text">
+              <div class="technique-name">Tabla de Polaridades — Checklist</div>
+              <div class="technique-detail">Patrones bajos vs. polo elevado · Exceso de control · Queja · Malhumor · y sus opuestos conscientes</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">♆</div>
+            <div class="technique-text">
+              <div class="technique-name">Biblioteca de Meditaciones — Nivel Sombra</div>
+              <div class="technique-detail">Audios de acompañamiento para sostener el proceso entre módulos · Elevación de frecuencia y enfoque</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Formato</div>
+        <div class="format-tags">
+          <span class="format-tag">Online · Autoguiado</span>
+          <span class="format-tag">Video + Cuadernillo</span>
+          <span class="format-tag">Comunidad de Apoyo</span>
+          <span class="format-tag">Acceso Permanente</span>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Resultado al Completar</div>
+        <div class="outcome-box">
+          La mujer sale con un mapa claro de sus heridas fundamentales en todas sus capas, ha visto su sombra cara a cara, y ha asumido responsabilidad radical de su realidad. Está lista para sanar.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- GRADO II — ALBEDO -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="grade grade-albedo">
+    <div class="grade-header">
+      <div class="grade-header-inner">
+        <div class="grade-number">II</div>
+        <div class="grade-titles">
+          <div class="grade-roman">Grado II · Albedo</div>
+          <div class="grade-name">La Purificación</div>
+          <div class="grade-subtitle">Desprogramación de la identidad limitada · Reactivación de la frecuencia original</div>
+          <div class="grade-identity">Mujer Integrada</div>
+          <div class="grade-essence">
+            "Ya vio. Ahora sana. No desde la fuerza de voluntad — desde el cuerpo, el subconsciente y la frecuencia. Al final de este grado, la mujer está en paz consigo misma."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-body">
+
+      <div class="section-block">
+        <div class="section-label">Módulos del Programa</div>
+        <div class="modules-grid">
+          <div class="module-item">
+            <div class="module-num">01</div>
+            <div class="module-name">Desprogramación del Subconsciente</div>
+            <div class="module-desc">Creencias limitantes · Imprints tempranos · Reprogramación profunda</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">02</div>
+            <div class="module-name">Trabajo Somático Profundo</div>
+            <div class="module-desc">El cuerpo como archivo de la herida · Liberación celular</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">03</div>
+            <div class="module-name">Regulación del Sistema Nervioso</div>
+            <div class="module-desc">Salir del freeze · Protocolo de descongelamiento · Reprogramación neurológica</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">04</div>
+            <div class="module-name">Integración de Partes Internas</div>
+            <div class="module-desc">Reconciliación con la sombra integrada · Partes en conflicto</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">05</div>
+            <div class="module-name">Sanación Multidimensional</div>
+            <div class="module-desc">Ancestral · Energético · Memorias del alma</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">06</div>
+            <div class="module-name">Reactivación de la Frecuencia Original</div>
+            <div class="module-desc">Identidad esencial · Vuelta al ser antes de la herida</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Técnicas y Herramientas</div>
+        <div class="techniques-list">
+          <div class="technique-item">
+            <div class="technique-icon">🜁</div>
+            <div class="technique-text">
+              <div class="technique-name">Protocolo de Descongelamiento por Entorno</div>
+              <div class="technique-detail">Cambio de contexto físico intencional · Tiempo separado · Entorno seguro y bello para reprogramar el sistema nervioso desde el cuerpo</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">⬡</div>
+            <div class="technique-text">
+              <div class="technique-name">Medición de Progreso por Acciones Concretas</div>
+              <div class="technique-detail">Indicadores observables de transformación · No solo insight — acción verificable · El cuerpo y el comportamiento como evidencia</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">◈</div>
+            <div class="technique-text">
+              <div class="technique-name">Reprogramación Subconsciente Multidimensional</div>
+              <div class="technique-detail">Hipnosis · Meditaciones de reprogramación · Trabajo con memorias del alma · Técnicas de reescritura de imprints</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">☽</div>
+            <div class="technique-text">
+              <div class="technique-name">Trabajo Somático Guiado</div>
+              <div class="technique-detail">Movimiento consciente · Liberación de trauma almacenado en tejidos · Integración cuerpo-mente</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">♆</div>
+            <div class="technique-text">
+              <div class="technique-name">Biblioteca de Meditaciones — Nivel Purificación</div>
+              <div class="technique-detail">Audios de acompañamiento somático y subconsciente · Diferentes estilos y profundidades</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Formato</div>
+        <div class="format-tags">
+          <span class="format-tag">Online · Autoguiado</span>
+          <span class="format-tag">Video + Audios Somáticos</span>
+          <span class="format-tag">Seguimiento de Progreso</span>
+          <span class="format-tag">Comunidad Viva</span>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Resultado al Completar</div>
+        <div class="outcome-box">
+          La mujer está en paz consigo misma. Su sistema nervioso regulado, su subconsciente desprogramado, su frecuencia original reactivada. No es calma pasiva — es la base desde donde se construye el poder real.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- GRADO III — CITRINITAS -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="grade grade-citrinitas">
+    <div class="grade-header">
+      <div class="grade-header-inner">
+        <div class="grade-number">III</div>
+        <div class="grade-titles">
+          <div class="grade-roman">Grado III · Citrinitas</div>
+          <div class="grade-name">La Activación</div>
+          <div class="grade-subtitle">Formación de la Sacerdotisa Moderna · Entrenamiento de capacidades, dones y virtud</div>
+          <div class="grade-identity">Sacerdotisa Encarnada</div>
+          <div class="grade-essence">
+            "Vio. Sanó. Ahora se forma. Este es el grado de las escuelas de misterio — donde la mujer es entrenada en sus capacidades reales, no en conceptos. Sale manifestando conscientemente y manejando energía."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-body">
+
+      <div class="section-block">
+        <div class="section-label">Módulos del Programa</div>
+        <div class="modules-grid">
+          <div class="module-item">
+            <div class="module-num">01</div>
+            <div class="module-name">Autoridad Interna No Delegada</div>
+            <div class="module-desc">Decidir sin permiso · Sostener sin validación · Dejar de sobreexplicarse</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">02</div>
+            <div class="module-name">Capacidad de Sostener</div>
+            <div class="module-desc">Sentir sin colapsar · No huir del vacío · Regular sin anestesiar</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">03</div>
+            <div class="module-name">Visión Clara y Discernimiento</div>
+            <div class="module-desc">Ver sin distorsión · Detectar patrones · Nombrar sin suavizar</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">04</div>
+            <div class="module-name">Integridad y Coherencia Radical</div>
+            <div class="module-desc">Palabra-acción alineadas · Cortar micro-autoengaños · No traicionarse</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">05</div>
+            <div class="module-name">Arte de la Transmisión</div>
+            <div class="module-desc">Hacer sentir y ver · Hablar desde experiencia · Simplificar lo profundo</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">06</div>
+            <div class="module-name">Manejo Energético Consciente</div>
+            <div class="module-desc">Qué suma / qué drena · Qué es mío / qué no · Cuándo actuar / cuándo soltar</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">07</div>
+            <div class="module-name">Relación con el Poder y la Visibilidad</div>
+            <div class="module-desc">No temer ser vista · No minimizar el impacto · No esconderse al crecer</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">08</div>
+            <div class="module-name">Manifestación Consciente de Realidad</div>
+            <div class="module-desc">Identidad → Frecuencia → Creación · Desde plenitud, no desde carencia</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Tradición Iniciática — Aporte de las Escuelas de Misterio</div>
+        <div class="techniques-list">
+          <div class="technique-item">
+            <div class="technique-icon">🜂</div>
+            <div class="technique-text">
+              <div class="technique-name">El Entrenamiento de la Voz y la Presencia</div>
+              <div class="technique-detail">Las sacerdotisas de Delfos, Isis y Eleusis eran entrenadas en el arte de la voz como herramienta de transmisión energética. La voz no informa — activa. Entrenamiento en presencia, resonancia y transmisión oral.</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">☽</div>
+            <div class="technique-text">
+              <div class="technique-name">Trabajo con Ciclos y Tiempos Sagrados</div>
+              <div class="technique-detail">Las tradiciones de Avalon, las Vestales y los Misterios de Eleusis integraban los ritmos lunares y estacionales como mapa interior. Alineación con ciclos naturales como tecnología de manifestación.</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">◈</div>
+            <div class="technique-text">
+              <div class="technique-name">El Arte del Ritual como Tecnología de Realidad</div>
+              <div class="technique-detail">El ritual no es decorativo — es programación intencional del campo. Diseño de rituales personales de anclaje, activación y cierre. Creación de contenedores energéticos propios.</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">⬡</div>
+            <div class="technique-text">
+              <div class="technique-name">Custodia del Umbral — El Arte de Sostener Espacios</div>
+              <div class="technique-detail">La sacerdotisa era guardiana del umbral entre mundos. Entrenamiento en crear y sostener contenedores grupales, sostener la sombra ajena sin contaminarse y mantener el centro propio.</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">🜃</div>
+            <div class="technique-text">
+              <div class="technique-name">Silencio como Práctica de Poder</div>
+              <div class="technique-detail">En todas las escuelas de misterio el silencio era entrenamiento, no ausencia. Práctica del silencio interno como herramienta de percepción, discernimiento y acceso a conocimiento propio.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Formato</div>
+        <div class="format-tags">
+          <span class="format-tag">Grupo Pequeño · Intensivo</span>
+          <span class="format-tag">Cara a Cara / Live</span>
+          <span class="format-tag">Duración Extendida</span>
+          <span class="format-tag">Alta Inversión</span>
+          <span class="format-tag">Selección de Participantes</span>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Resultado al Completar</div>
+        <div class="outcome-box">
+          La mujer sale manifestando conscientemente su realidad y manejando su energía con precisión. No es una mujer espiritual — es una mujer que se sostiene a sí misma. Una Sacerdotisa Moderna auto-declarada.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- GRADO IV — RUBEDO -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="grade grade-rubedo">
+    <div class="grade-header">
+      <div class="grade-header-inner">
+        <div class="grade-number">IV</div>
+        <div class="grade-titles">
+          <div class="grade-roman">Grado IV · Rubedo</div>
+          <div class="grade-name">La Obra Magna</div>
+          <div class="grade-subtitle">Servicio único · Frecuencia activa · Impacto y riqueza alineada</div>
+          <div class="grade-identity">Alquimista de Realidad</div>
+          <div class="grade-essence">
+            "La mujer que llega aquí ya vio, sanó y fue formada. Ahora construye. Su misión, su estructura, su impacto en el mundo. Mentoría uno a uno para bajar la visión a la materia — paso a paso."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-body">
+
+      <div class="section-block">
+        <div class="section-label">Módulos del Programa</div>
+        <div class="modules-grid">
+          <div class="module-item">
+            <div class="module-num">01</div>
+            <div class="module-name">El Servicio Único — Misión Encarnada</div>
+            <div class="module-desc">Identificar el don específico · La misión como expresión de frecuencia</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">02</div>
+            <div class="module-name">Canalización Estructurada</div>
+            <div class="module-desc">Cómo bajar visión a materia · Del campo a la forma concreta</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">03</div>
+            <div class="module-name">Estructura que Soporta el Nivel de Emisión</div>
+            <div class="module-desc">Sistemas, hábitos y contenedores para sostener el impacto sin colapsar</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">04</div>
+            <div class="module-name">Liderazgo Consciente en el Mundo</div>
+            <div class="module-desc">Cómo liderar sin ego · Servicio desde plenitud · Presencia en el mundo</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">05</div>
+            <div class="module-name">Prosperidad Alineada</div>
+            <div class="module-desc">Recibir riqueza en coherencia con la frecuencia · Relación con el dinero como energía</div>
+          </div>
+          <div class="module-item">
+            <div class="module-num">06</div>
+            <div class="module-name">Impacto y Elevación Colectiva</div>
+            <div class="module-desc">Contribución a la transición de conciencia del planeta · La mujer como agente de cambio</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Técnicas y Herramientas</div>
+        <div class="techniques-list">
+          <div class="technique-item">
+            <div class="technique-icon">🜂</div>
+            <div class="technique-text">
+              <div class="technique-name">Mentoría Uno a Uno — Alta Frecuencia</div>
+              <div class="technique-detail">Acompañamiento personalizado para construir la estructura única que soporte el nivel de emisión e impacto de cada mujer</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">◈</div>
+            <div class="technique-text">
+              <div class="technique-name">Protocolo de Materialización Paso a Paso</div>
+              <div class="technique-detail">Metodología propia para bajar la visión a acciones concretas sin perder la frecuencia · Estructura + canal integrados</div>
+            </div>
+          </div>
+          <div class="technique-item">
+            <div class="technique-icon">⬡</div>
+            <div class="technique-text">
+              <div class="technique-name">Mapa de Impacto Personal</div>
+              <div class="technique-detail">Diseño del legado · Cómo la frecuencia original activa de cada mujer contribuye a la elevación colectiva</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Formato</div>
+        <div class="format-tags">
+          <span class="format-tag">Mentoría 1:1</span>
+          <span class="format-tag">Alta Inversión</span>
+          <span class="format-tag">Acceso Directo a Jaisa</span>
+          <span class="format-tag">Plazas Muy Limitadas</span>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <div class="section-block">
+        <div class="section-label">Resultado al Completar</div>
+        <div class="outcome-box">
+          La Alquimista de Realidad está construyendo su obra magna en el mundo. Su misión encarnada, su estructura sostenible, su impacto alineado con su frecuencia original. Recibe riqueza en coherencia con quien es.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Escuela Iniciática de la Nueva Tierra · Academia de Sacerdotisas Modernas</p>
+  </div>
+
+</div>
+
+<script>
+  // Generate stars
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 1.5 + 0.5;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      --o: ${Math.random() * 0.4 + 0.1};
+      --d: ${Math.random() * 4 + 2}s;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(star);
+  }
+</script>
+
+</body>
+</html>
